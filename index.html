@@ -6028,23 +6028,28 @@ const UP_ABOUT = [
         tags:[{ t:'rhone.com', dot:'#1c2b3a' }, { t:'vuoriclothing.com', dot:'#c2703f' },
               { t:'tenthousand.cc', dot:'#111111' }, { t:'cultsport.com', dot:'#d13b2e' }] }
     ];
-    // placeholder copy for any brand without a bespoke set above: same categories, generic content
+    // placeholder copy for any brand without a bespoke set above: honest about
+    // what was actually read off the site — never a confident-sounding
+    // sentence with nothing real behind it. Connect cards sit early (2nd,
+    // then mid-rail), never first, never last.
     const genericAbout = (B) => [
       { agent:'orchestrator', about:true, editable:true, title:'About the brand',
-        sub:`What ${B.name} stands for, distilled from the homepage and the way its product copy talks about itself.` },
-      { agent:'orchestrator', about:true, editable:true, title:'Voice and tone',
-        sub:'How the brand writes when it is describing its own products.' },
+        tags:[{ t:'Add a line about your brand', gap:true }] },
       { agent:'orchestrator', about:true,
         connect:'shopify' },
+      { agent:'orchestrator', about:true, editable:true, title:'Voice and tone',
+        tags:[{ t:'Add a few words on how you write', gap:true }] },
       { agent:'orchestrator', about:true, editable:true, title:'Company',
-        sub:`Where ${B.name} is run from, how long it has been trading, how it reaches people, and roughly where it sits against others in its category.`,
+        sub:`Where ${B.name} is run from, how long it has been trading, and roughly where it sits against others in its category.`,
         tags:[{ t:'Add team size', gap:true }, { t:'Add locations', gap:true }] },
       { agent:'orchestrator', about:true, editable:true, title:'Product catalog',
-        sub:`${B.products} products being pulled into one catalog, organized the way ${B.name} already organizes them.` },
+        tags:[{ t:'Add your product categories', gap:true }] },
+      { agent:'orchestrator', about:true,
+        connect:'meta' },
       { agent:'orchestrator', about:true, editable:true, title:'Product information',
-        sub:'The item getting the most attention on the storefront right now, the claim it leads with, and the handful of product lines that make up most of the range today.' },
+        tags:[{ t:'Add your best-selling product', gap:true }] },
       { agent:'orchestrator', about:true, editable:true, title:'Audience',
-        sub:'Who the storefront is written for, read off the product copy and the reviews.' },
+        tags:[{ t:'Add your target audience', gap:true }] },
       { agent:'orchestrator', about:true, editable:true, title:'Industry leaders',
         tags:[{ t:'Add a competitor', gap:true }, { t:'Add a competitor', gap:true }] }
     ];
@@ -6087,7 +6092,9 @@ const aboutCard = (p) => `
     // just with copy written for this moment rather than the generic Signals one
     const CONNECT_ROWS = {
       shopify: { icon:'<img src="assets/logo-shopify.png" alt="">', name:'Shopify',
-                 desc:'Connect Shopify for detailed product analytics.' }
+                 desc:'Connect Shopify for detailed product analytics.' },
+      meta: { icon:'<img src="assets/logo-meta.svg" alt="">', name:'Meta Ads',
+              desc:'Connect Meta Ads to see what’s actually driving traffic.' }
     };
     const aboutConnectRow = (id) => {
       const c = CONNECT_ROWS[id];
