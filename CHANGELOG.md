@@ -2,6 +2,12 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Feed card copy: clearer labels
+
+- Card menu: "Copy link" is now "Copy link to share"
+- Bottom-right dock: "Tune" is now "Tune Feed", "Jam" is now "Jam with Team"
+
+
 ## 2026-09-18 — Onboarding: "Your brand's feed is ready"
 
 The finish-screen headline is now "Your brand's feed is ready" (was "Your feed is ready").

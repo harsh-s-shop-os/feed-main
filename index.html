@@ -755,7 +755,7 @@
      deck carries no shimmering status next to a column title */
   .col-now{min-width:0;display:none;justify-content:flex-end;overflow:hidden}
   .col-now .col-live,.col-now .col-off{font-size:12.5px;line-height:18px;flex:0 1 auto;min-width:0}
-  body.setup-run .col-now{display:flex}
+  /* the shimmer status is no longer beside the title; it sits in .col-sub below it */
   .col-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
   .col-fill{flex:1}
   .col-head h2{
@@ -1052,6 +1052,40 @@
   @media (prefers-reduced-motion:reduce){
     .ring-fg{transition:none;stroke-dashoffset:var(--o)}
     .ring-tip{transition:none;opacity:1}
+  }
+
+  /* media — activity dial (brand health, Health-app style).
+     One rounded-triangle petal per metric, apex at the centre, petal size =
+     progress. The pale petal behind each is the 100 mark — the same job the
+     faint ring track does on the ring card above. No icons, no inactive
+     outline petals: only the three that carry a number. */
+  .dialwrap{
+    background:#0d0d0d;padding:26px 16px 20px;
+    display:flex;flex-direction:column;align-items:center;gap:22px;
+  }
+  .dial{position:relative;width:236px;height:236px}
+  .dial svg{width:100%;height:100%;display:block;overflow:visible}
+  .dial-track{opacity:.16}
+  .dial-fill{
+    transform-box:view-box;                 /* origin is set per petal, at its inner tip */
+    transform:scale(0);
+    transition:transform 1.15s cubic-bezier(.22,.8,.25,1);
+    transition-delay:var(--d,0s);
+  }
+  .card.in .dial-fill{transform:scale(var(--p))}
+
+  /* the score sits in the carved-out centre — number only, no label */
+  .dial-center{
+    position:absolute;inset:0;display:grid;place-content:center;
+    text-align:center;pointer-events:none;
+  }
+  .dial-center .val{
+    font-size:26px;font-weight:600;line-height:1;letter-spacing:-.02em;
+    color:var(--fg);margin:0;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .dial-fill{transition:none;transform:scale(var(--p))}
   }
 
   /* media — data panel (AI visibility) */
@@ -2500,8 +2534,13 @@
   body.setup-run .col-menu,
   body.setup-run .col-meta{display:none}
   body.setup-run .col-head hr{margin-top:16px}
-  .col-sub{display:none;margin:5px 0 0;font-size:13.5px;line-height:19px;color:var(--fg-2);letter-spacing:-.003em}
-  body.setup-run .col-sub{display:block}
+  .col-sub{display:none;margin:7px 0 0}
+  body.setup-run .col-sub{display:flex}
+  .col-sub .col-live{display:inline-flex;align-items:center;gap:7px;flex:1;min-width:0}
+  .col-sub .what{font-size:13.5px;line-height:19px;letter-spacing:-.003em}
+  /* a smaller matrix, sized to sit on the copy's line rather than the title's */
+  .col-sub .mx{width:13px;height:13px;grid-template-columns:repeat(4,2px);gap:1.5px}
+  .col-sub .mx i{width:2px;height:2px}
 
 
   /* ================= Signals: the customer column ================= */
@@ -3383,7 +3422,7 @@
       <path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/>
       <path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/>
     </svg>
-    Tune
+    Tune Feed
   </button>
 
   <button class="pill" id="jam">
@@ -3391,7 +3430,7 @@
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
       <path d="M19 8v6"/><path d="M22 11h-6"/>
     </svg>
-    Jam
+    Jam with Team
   </button>
 </div>
 
@@ -3424,6 +3463,18 @@
         { label:'Visibility', value:71, color:'#ff375f' },
         { label:'Content',    value:86, color:'#a8ff2e' },
         { label:'Storefront', value:74, color:'#22d3ee' }
+      ]},
+      title:'Urban Performance brand health climbed 12 points this week',
+      sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
+      cta:{ label:'Open report' } },
+
+    // same card, dial instead of rings — kept side by side so the two
+    // readings of brand health can be compared in place
+    { agent:'visibility', time:'45 min',
+      dial:{ score:78, metrics:[
+        { label:'Visibility', value:71, color:'#f2762e' },
+        { label:'Content',    value:86, color:'#8ed14a' },
+        { label:'Storefront', value:74, color:'#3d7ef7' }
       ]},
       title:'Urban Performance brand health climbed 12 points this week',
       sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
@@ -3580,8 +3631,69 @@
       </div>`;
   };
 
+  // Health-app style dial, built the way the reference is: a circle with the
+  // centre carved out (a donut), split into one sector per metric with a
+  // uniform gap, then a large corner radius on every corner. The rounding is
+  // done by insetting the sharp sector by the corner radius and stroking it
+  // back out with round joins — exact rounded corners, arcs included.
+  const dialPanel = (d) => {
+    const C = 118;
+    const G = { ro:112, ri:36, r:24, gap:10 };          // outer, hole, corner, gap
+    const n = d.metrics.length, half = 180 / n;
+    const rad = (a) => a * Math.PI / 180;
+    const at  = (R, a) => [C + R * Math.cos(rad(a)), C + R * Math.sin(rad(a))];
+    const P   = (pt) => `${pt[0].toFixed(2)} ${pt[1].toFixed(2)}`;
+
+    const sector = (deg) => {
+      const inset = G.gap / 2 + G.r;                     // sides move in by this
+      const Ro = G.ro - G.r, Ri = G.ri + G.r;            // arcs move in by the radius
+      const bo = Math.asin(inset / Ro) * 180 / Math.PI;  // angle the side inset eats at the outer arc
+      let path = `M${P(at(Ro, deg - (half - bo)))}A${Ro} ${Ro} 0 0 1 ${P(at(Ro, deg + (half - bo)))}`;
+      const apex = inset / Math.sin(rad(half));          // where the two inset sides would meet
+      if (Ri > apex) {                                   // hole is big enough: inner arc survives
+        const bi = Math.asin(inset / Ri) * 180 / Math.PI;
+        path += `L${P(at(Ri, deg + (half - bi)))}A${Ri} ${Ri} 0 0 0 ${P(at(Ri, deg - (half - bi)))}`;
+      } else {                                           // hole too small: sides meet in a point
+        path += `L${P(at(apex, deg))}`;
+      }
+      return path + 'Z';
+    };
+
+    const shape = (deg, color, extra = '') =>
+      `<path d="${sector(deg)}" fill="${color}" stroke="${color}"
+             stroke-width="${G.r * 2}" stroke-linejoin="round"${extra}/>`;
+
+    const petals = d.metrics.map((m, i) => {
+      const deg = -90 + i * (360 / n);
+      const tip = at(G.ri, deg);                         // progress grows out from the hole, not the centre,
+      return {                                           // so the number's room stays constant
+        track: shape(deg, m.color, ' class="dial-track"'),
+        fill:  shape(deg, m.color, ` class="dial-fill" style="--p:${Math.min(m.value / 100, 1).toFixed(3)};--d:${(i * 0.09).toFixed(2)}s;transform-origin:${P(tip).replace(' ', 'px ')}px"`)
+      };
+    });
+
+    return `
+      <div class="dialwrap">
+        <div class="dial">
+          <svg viewBox="0 0 236 236" aria-hidden="true">
+            ${petals.map(x => x.track).join('')}
+            ${petals.map(x => x.fill).join('')}
+          </svg>
+          <div class="dial-center"><p class="val">${d.score}</p></div>
+        </div>
+        <div class="stat-row">
+          ${d.metrics.map(x => `
+            <div class="stat">
+              <p class="k">${x.label}</p>
+              <p class="v" style="color:${x.color}">${x.value}<span style="color:var(--fg-3);font-weight:400">/100</span></p>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  };
+
   // chart panel | single full-bleed image | full-width snap track, one slide at a time
   const media = (p) => {
+    if (p.dial) return dialPanel(p.dial);
     if (p.rings) return ringPanel(p.rings);
     if (p.chart) return chart(p.chart);
     const r = p.ratio ? ` data-r="${p.ratio}"` : '';
@@ -3638,7 +3750,7 @@
             ${svg(I.more, 20)}
           </button>
           <div class="menu" role="menu">
-            <button role="menuitem" data-act="copy">${svg(I.link, 17)} Copy link</button>
+            <button role="menuitem" data-act="copy">${svg(I.link, 17)} Copy link to share</button>
             <hr>
             <button role="menuitem" data-act="not-interested">${svg(I.circleMinus, 17)} Not interested in this</button>
             <button role="menuitem" data-act="fewer">${svg(I.bellOff, 17)} Show fewer from this agent</button>
@@ -3773,17 +3885,23 @@
     storefront: { name:'Storefront', dot:'#e8c34a' },
     visibility: { name:'Visibility', dot:'#7aa8ff' },
     // setup-only column: not in COL_ORDER, so it never joins the built deck or the nav
-    about:      { name:'Brand Memory', dot:'#c0c0c0' }
+    about:      { name:'Brand', dot:'#c0c0c0' }
   };
   // one line under each column title while the feed is being built: what that
   // column is collecting, said the way a CMO would want it said
   const COL_SUB = {
-    about:      'Reading your brand into memory. Every agent is working from this.',
-    creatives:  'Reading your creative direction from what is already holding attention.',
-    ads:        'Going through your last thirty days of spend for what deserves more.',
-    storefront: 'Walking your store end to end, the way a customer would.',
+    about:      'Reading your brand into memory every agent will use.',
+    creatives:  'Reading your creative direction from what already works.',
+    ads:        'Going through your last 30 days of spend for what deserves more.',
+    storefront: 'Walking your store end-to-end like your average customer.',
     visibility: 'Asking the AI assistants what they say when your category comes up.'
   };
+  // the shimmering status that sits under a column title during setup: a small
+  // matrix and the one line that says what the column is doing, from COL_SUB
+  const colSubHTML = (k) => COL_SUB[k]
+    ? `<div class="col-sub"><span class="col-live">${MATRIX}<span class="what" style="--sh:2.8s">${COL_SUB[k]}</span></span></div>`
+    : '';
+
   const SECTOR_BY_AGENT = {
     creative:'creatives', performance:'ads', storefront:'storefront', visibility:'visibility'
   };
@@ -3963,7 +4081,7 @@
               </div>
             </span>
           </div>
-          ${COL_SUB[k] ? `<p class="col-sub">${COL_SUB[k]}</p>` : ''}
+          ${colSubHTML(k)}
           <hr>
         </div>
         <div class="col-body">
@@ -5874,7 +5992,7 @@ const UP_ABOUT = [
         title:'Audience',
         sub:'Buyers skew 24 to 34, metro India, training two or three times a week and wearing the same piece to work after.' },
       { agent:'orchestrator', about:true, editable:true,
-        title:'Competitors',
+        title:'Industry leaders',
         tags:[{ t:'rhone.com', dot:'#1c2b3a' }, { t:'vuoriclothing.com', dot:'#c2703f' },
               { t:'tenthousand.cc', dot:'#111111' }, { t:'cultsport.com', dot:'#d13b2e' }] }
     ];
@@ -5895,7 +6013,7 @@ const UP_ABOUT = [
         sub:'The item getting the most attention on the storefront right now, the claim it leads with, and the handful of product lines that make up most of the range today.' },
       { agent:'orchestrator', about:true, editable:true, title:'Audience',
         sub:'Who the storefront is written for, read off the product copy and the reviews.' },
-      { agent:'orchestrator', about:true, editable:true, title:'Competitors',
+      { agent:'orchestrator', about:true, editable:true, title:'Industry leaders',
         tags:[{ t:'Add a competitor', gap:true }, { t:'Add a competitor', gap:true }] }
     ];
     const ABOUT_CONTENT = (B) => B.host === 'urbanperformance.com' ? UP_ABOUT : genericAbout(B);
@@ -6063,7 +6181,7 @@ const aboutCard = (p) => `
               </div>
             </span>
           </div>
-          <p class="col-sub">${COL_SUB.about}</p>
+          ${colSubHTML('about')}
           <hr>
         </div>
         <div class="col-body"></div>
