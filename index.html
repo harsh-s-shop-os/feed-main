@@ -3472,9 +3472,9 @@
     // readings of brand health can be compared in place
     { agent:'visibility', time:'45 min',
       dial:{ score:78, metrics:[
-        { label:'Visibility', value:71, color:'#f2762e' },
-        { label:'Content',    value:86, color:'#8ed14a' },
-        { label:'Storefront', value:74, color:'#3d7ef7' }
+        { label:'Visibility', value:71, color:'#ff375f' },
+        { label:'Content',    value:86, color:'#a8ff2e' },
+        { label:'Storefront', value:74, color:'#22d3ee' }
       ]},
       title:'Urban Performance brand health climbed 12 points this week',
       sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
@@ -3638,8 +3638,8 @@
   // back out with round joins — exact rounded corners, arcs included.
   const dialPanel = (d) => {
     const C = 118;
-    const G = { ro:112, ri:36, r:24, gap:10 };          // outer, hole, corner, gap
-    const n = d.metrics.length, half = 180 / n;
+    const G = { span:60, ro:112, ri:36, r:16, gap:0 }; // degrees per segment, outer, hole, corner, extra gap
+    const n = d.metrics.length, half = G.span / 2;      // 60° each on a 120° pitch: the rest is air
     const rad = (a) => a * Math.PI / 180;
     const at  = (R, a) => [C + R * Math.cos(rad(a)), C + R * Math.sin(rad(a))];
     const P   = (pt) => `${pt[0].toFixed(2)} ${pt[1].toFixed(2)}`;
@@ -3659,16 +3659,17 @@
       return path + 'Z';
     };
 
-    const shape = (deg, color, extra = '') =>
+    const shape = (deg, color, extra = '', glow = false) =>
       `<path d="${sector(deg)}" fill="${color}" stroke="${color}"
-             stroke-width="${G.r * 2}" stroke-linejoin="round"${extra}/>`;
+             stroke-width="${G.r * 2}" stroke-linejoin="round"${extra}
+             ${glow ? `filter="url(#dial-glow-${color.slice(1)})"` : ''}/>`;
 
     const petals = d.metrics.map((m, i) => {
       const deg = -90 + i * (360 / n);
       const tip = at(G.ri, deg);                         // progress grows out from the hole, not the centre,
       return {                                           // so the number's room stays constant
         track: shape(deg, m.color, ' class="dial-track"'),
-        fill:  shape(deg, m.color, ` class="dial-fill" style="--p:${Math.min(m.value / 100, 1).toFixed(3)};--d:${(i * 0.09).toFixed(2)}s;transform-origin:${P(tip).replace(' ', 'px ')}px"`)
+        fill:  shape(deg, m.color, ` class="dial-fill" style="--p:${Math.min(m.value / 100, 1).toFixed(3)};--d:${(i * 0.09).toFixed(2)}s;transform-origin:${P(tip).replace(' ', 'px ')}px"`, true)
       };
     });
 
@@ -3676,6 +3677,11 @@
       <div class="dialwrap">
         <div class="dial">
           <svg viewBox="0 0 236 236" aria-hidden="true">
+            <defs>${d.metrics.map(m => `
+              <filter id="dial-glow-${m.color.slice(1)}" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="${m.color}" flood-opacity=".66"/>
+              </filter>`).join('')}
+            </defs>
             ${petals.map(x => x.track).join('')}
             ${petals.map(x => x.fill).join('')}
           </svg>
@@ -4522,12 +4528,35 @@
     toast('Pro is on. Drag a column edge to resize it.');
   });
 
-  const FEED_ORDER = [
-    POSTS[0], TEXT_POSTS[0], POSTS[1], POSTS[2], TEXT_POSTS[1],
-    POSTS[3], POSTS[4], TEXT_POSTS[2], POSTS[5], POSTS[6], TEXT_POSTS[3], POSTS[7]
-  ];
+  // the single feed has no columns, so every card the deck spreads across
+  // catalog/creatives/ads/storefront/visibility has to show up here too --
+  // interleaved, not just concatenated, so image posts and data-row posts
+  // keep alternating the way they always have. Reading straight from the
+  // same three arrays the deck reads (via ALL_POSTS) means a card added to
+  // any of them shows up in both places with nothing else to update.
+  const interleave = (...groups) => {
+    const total = groups.reduce((n, g) => n + g.length, 0);
+    const at = groups.map(() => 0);
+    const order = [];
+    for (let slot = 0; slot < total; slot++) {
+      let pick = -1, need = -Infinity;
+      groups.forEach((g, i) => {
+        if (at[i] >= g.length) return;
+        const n = (slot + 1) * g.length / total - at[i]; // how overdue this group is
+        if (n > need) { need = n; pick = i; }
+      });
+      order.push(groups[pick][at[pick]++]);
+    }
+    return order;
+  };
+  const FEED_ORDER = interleave(POSTS, TEXT_POSTS, DECK_ONLY);
+  // anchored to specific cards rather than fixed indexes, so the two connect
+  // prompts land after the same posts no matter how interleave() orders the rest
+  const FEED_CONNECT_AFTER = { meta: POSTS[1], shopify: POSTS[3] };
   document.getElementById('feed').insertAdjacentHTML('beforeend',
-    FEED_ORDER.map((c, i) => card(c) + (i === 2 ? connectCard('meta') : i === 5 ? connectCard('shopify') : '')).join(''));
+    FEED_ORDER.map(c => card(c) +
+      (c === FEED_CONNECT_AFTER.meta ? connectCard('meta') :
+       c === FEED_CONNECT_AFTER.shopify ? connectCard('shopify') : '')).join(''));
   paintSubbars();
 
   /* ---------------- interactions ---------------- */
