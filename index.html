@@ -2999,6 +2999,42 @@
       <div class="qwrap" id="qwrap2"></div>
     </div>
 
+    <div class="ostep" id="step-thinfork" hidden>
+      <div class="orow-static backrow">
+        <button class="oic-btn" type="button" id="thinfork-back" aria-label="Back">
+          <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></span>
+        </button>
+        <span>Help us fill in the rest</span>
+      </div>
+      <p class="qg-found" id="tf-found"></p>
+      <div class="orows" id="tf-choices">
+        <button class="orow" type="button" id="tf-ask">
+          <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span>
+          Answer a couple of quick questions
+        </button>
+        <button class="orow" type="button" id="tf-connect">
+          <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          Connect a tool instead
+        </button>
+        <button class="orow" type="button" id="tf-write">
+          <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
+          Just write it in my own words
+        </button>
+      </div>
+      <div class="qwrap" id="tf-write-wrap" hidden>
+        <div class="qrow open in" data-i="0">
+          <div class="qhead">
+            <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg></span>
+            <span class="qlabel">What do you sell, and who’s it for?</span>
+          </div>
+          <form class="pfield-row" id="tf-write-form">
+            <div class="ofield"><input type="text" id="tf-write-input" placeholder="a line in your own words" autocomplete="off" spellcheck="false"></div>
+            <button class="cta-go" type="submit"><span class="cta-label">Next</span></button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="cta-row" id="cta-row">
     <button class="cta-alt" type="button" id="start-own" hidden>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -6467,10 +6503,10 @@ const aboutCard = (p) => `
     const submit = () => {
       const host = cleanHost(urlEl.value.trim());
       if (host === 'urbanperformance.com') { begin(host, false); return; }
-      pendingHost = host;
-      $('qg-found').textContent = `We looked at ${host} but couldn’t find much yet.`;
-      quickgapWizard.start();
-      goQuickgap(true);
+      thinforkHost = host;
+      resetThinfork();
+      $('tf-found').textContent = `We looked at ${host}. That's about all we could find automatically.`;
+      goThinfork(true);
     };
     $('start-form').addEventListener('submit', (e) => { e.preventDefault(); submit(); });
 
@@ -6676,9 +6712,9 @@ const aboutCard = (p) => `
 
     /* ---- thin scrape: a real URL that didn't give us much back. Instead of
        building a rail of confident-sounding findings with nothing behind
-       them, ask the 1-2 things that matter most, then continue straight into
-       the same rail — the scrap we did find stays pinned above the question
-       so it reads as ShopOS finishing its own sentence, not a fresh form ---- */
+       them, offer a fork: answer a couple of questions, connect a tool, or
+       just say it in your own words. The scrap we did find stays pinned
+       above the choice so it reads as ShopOS asking, not a dead end ---- */
     const stepQuickgap = $('step-quickgap');
     const QUICKGAP_QUESTIONS = [
       { id: 'product',  label: 'What’s the one thing you want people to buy first?', placeholder: 'enter your main product' },
@@ -6689,26 +6725,72 @@ const aboutCard = (p) => `
       begin(pendingHost, false, { product: answers[0], audience: answers[1] });
     });
 
-    let onQuickgap = false;
-    const goQuickgap = (toQG) => {
-      if (onQuickgap === toQG) return;
-      onQuickgap = toQG;
-      const leaving = toQG ? stepUrl : stepQuickgap;
-      const arriving = toQG ? stepQuickgap : stepUrl;
+    const stepThinfork = $('step-thinfork');
+    let thinforkHost = '';
+    let onThinfork = false;
+    const goThinfork = (toTF) => {
+      if (onThinfork === toTF) return;
+      onThinfork = toTF;
+      const leaving = toTF ? stepUrl : stepThinfork;
+      const arriving = toTF ? stepThinfork : stepUrl;
       leaving.classList.add('leaving');
       at(180, () => {
         leaving.classList.remove('leaving');
         leaving.hidden = true;
         arriving.hidden = false;
-        // reuses the same single-column spacing as the no-product step
-        startEl.classList.toggle('on-noproduct', toQG);
-        ctaRow.hidden = toQG;
+        startEl.classList.toggle('on-noproduct', toTF);
+        ctaRow.hidden = toTF;
         arriving.classList.remove('entering'); void arriving.offsetWidth;
         arriving.classList.add('entering');
         at(460, () => arriving.classList.remove('entering'));
       });
     };
-    $('quickgap-back').addEventListener('click', () => goQuickgap(false));
+    $('thinfork-back').addEventListener('click', () => goThinfork(false));
+
+    const resetThinfork = () => {
+      $('tf-choices').hidden = false;
+      $('tf-write-wrap').hidden = true;
+      $('tf-write-input').value = '';
+    };
+
+    // "answer questions" reuses the same quickgap step/wizard as its own
+    // sub-path, just entered from the fork instead of straight off the URL
+    let onQuickgapFromFork = false;
+    const goQuickgapFromFork = (toQG) => {
+      if (onQuickgapFromFork === toQG) return;
+      onQuickgapFromFork = toQG;
+      const leaving = toQG ? stepThinfork : stepQuickgap;
+      const arriving = toQG ? stepQuickgap : stepThinfork;
+      leaving.classList.add('leaving');
+      at(180, () => {
+        leaving.classList.remove('leaving');
+        leaving.hidden = true;
+        arriving.hidden = false;
+        arriving.classList.remove('entering'); void arriving.offsetWidth;
+        arriving.classList.add('entering');
+        at(460, () => arriving.classList.remove('entering'));
+      });
+    };
+    $('tf-ask').addEventListener('click', () => {
+      pendingHost = thinforkHost;
+      quickgapWizard.start();
+      goQuickgapFromFork(true);
+    });
+    $('quickgap-back').addEventListener('click', () => goQuickgapFromFork(false));
+
+    $('tf-connect').addEventListener('click', () => {
+      begin(thinforkHost, false);
+    });
+    $('tf-write').addEventListener('click', () => {
+      $('tf-choices').hidden = true;
+      $('tf-write-wrap').hidden = false;
+      $('tf-write-input').focus();
+    });
+    $('tf-write-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = $('tf-write-input').value.trim();
+      begin(thinforkHost, false, v ? { product: v } : {});
+    });
     const urlCharRe = /[^A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]/g;
     const looksLikeUrl = (v) => /^(https?:\/\/)?([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}([:/?#].*)?$/i.test(v.trim());
     const orowsEl = document.querySelector('.orows');
