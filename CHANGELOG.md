@@ -2,6 +2,11 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Ring card: drop the "Health" tag, center the score
+
+The number in the middle of the Apple-Health-style ring card had a small "Health" label above it. Removed it and let the score sit centered in the rings on its own.
+
+
 ## 2026-09-18 — Drop the dial-variant brand-health card; fix the connect-card anchors it broke
 
 The dial read of the brand-health card is commented out of `POSTS` (three passes at the shape, none of them right — kept, not deleted, in case it's worth another attempt). That shifted every index after it, which broke the meta/Shopify connect-card placement in the feed: it was anchored to `POSTS[1]`/`POSTS[3]` by position, and `POSTS[3]` no longer pointed at the card it was supposed to. Anchored by title instead, so it can't silently point at the wrong card again — and while fixing it, moved the Shopify prompt to follow the Cloud Soft Tee storefront post instead of the old dial card, which fits the "publish the changes" copy better anyway.

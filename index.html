@@ -1030,10 +1030,6 @@
     position:absolute;inset:0;display:grid;place-content:center;
     text-align:center;pointer-events:none;
   }
-  .ring-center .lbl{
-    font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--fg-3);margin:0 0 2px;
-  }
   .ring-center .val{
     font-size:40px;font-weight:600;line-height:1;letter-spacing:-.02em;
     color:var(--fg);margin:0;
@@ -3619,7 +3615,6 @@
         <div class="rings">
           <svg viewBox="0 0 236 236" aria-hidden="true">${arcs}</svg>
           <div class="ring-center">
-            <p class="lbl">Health</p>
             <p class="val">${r.score}</p>
           </div>
         </div>
