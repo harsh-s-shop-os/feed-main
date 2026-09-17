@@ -3468,17 +3468,19 @@
       sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
       cta:{ label:'Open report' } },
 
-    // same card, dial instead of rings — kept side by side so the two
-    // readings of brand health can be compared in place
-    { agent:'visibility', time:'45 min',
-      dial:{ score:78, metrics:[
-        { label:'Visibility', value:71, color:'#ff375f' },
-        { label:'Content',    value:86, color:'#a8ff2e' },
-        { label:'Storefront', value:74, color:'#22d3ee' }
-      ]},
-      title:'Urban Performance brand health climbed 12 points this week',
-      sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
-      cta:{ label:'Open report' } },
+    // dial variant of the brand-health card — parked, not in the feed.
+    // Tried three passes on the shape and none of them read right; rather
+    // than ship something that looks off, it's commented out here instead
+    // of deleted, in case the geometry is worth another attempt later.
+    // { agent:'visibility', time:'45 min',
+    //   dial:{ score:78, metrics:[
+    //     { label:'Visibility', value:71, color:'#ff375f' },
+    //     { label:'Content',    value:86, color:'#a8ff2e' },
+    //     { label:'Storefront', value:74, color:'#22d3ee' }
+    //   ]},
+    //   title:'Urban Performance brand health climbed 12 points this week',
+    //   sub:'Stronger recall on performance-fabric search terms and a cleaner product feed. Two weak spots remain in category coverage.',
+    //   cta:{ label:'Open report' } },
 
     { agent:'creative', time:'1 hr', ratio:'square',
       images:['assets/up-sq-1.jpg','assets/up-sq-2.jpg','assets/up-sq-3.jpg','assets/up-sq-4.jpg'],
@@ -4552,7 +4554,13 @@
   const FEED_ORDER = interleave(POSTS, TEXT_POSTS, DECK_ONLY);
   // anchored to specific cards rather than fixed indexes, so the two connect
   // prompts land after the same posts no matter how interleave() orders the rest
-  const FEED_CONNECT_AFTER = { meta: POSTS[1], shopify: POSTS[3] };
+  // matched by title, not array position -- POSTS gets edited (cards added,
+  // removed, commented out) independently of this file, and an index here
+  // would silently point at the wrong card the next time it does
+  const FEED_CONNECT_AFTER = {
+    meta: POSTS.find(p => p.title === 'A performance-proof campaign for The Flex henley'),
+    shopify: POSTS.find(p => p.title === 'Show why The Cloud Soft Tee outperforms a basic tee')
+  };
   document.getElementById('feed').insertAdjacentHTML('beforeend',
     FEED_ORDER.map(c => card(c) +
       (c === FEED_CONNECT_AFTER.meta ? connectCard('meta') :

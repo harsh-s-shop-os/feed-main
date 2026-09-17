@@ -2,6 +2,11 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Drop the dial-variant brand-health card; fix the connect-card anchors it broke
+
+The dial read of the brand-health card is commented out of `POSTS` (three passes at the shape, none of them right — kept, not deleted, in case it's worth another attempt). That shifted every index after it, which broke the meta/Shopify connect-card placement in the feed: it was anchored to `POSTS[1]`/`POSTS[3]` by position, and `POSTS[3]` no longer pointed at the card it was supposed to. Anchored by title instead, so it can't silently point at the wrong card again — and while fixing it, moved the Shopify prompt to follow the Cloud Soft Tee storefront post instead of the old dial card, which fits the "publish the changes" copy better anyway.
+
+
 ## 2026-09-18 — Feed and Pro deck now show the same cards
 
 The single-column feed was quietly a subset of what Pro mode's columns show: it was missing one image post, one data-led post, and all eight cards that used to be deck-only, twelve cards short of the full twenty-two. The feed's card order now comes from the same three lists the deck reads (interleaved for rhythm rather than dumped in as one long block), so any card added to those lists appears in both places automatically. Signals stays deck-only, as intended — everything else is now identical either way you look at the feed.
