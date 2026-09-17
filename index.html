@@ -2499,7 +2499,9 @@
   body.setup-run .col-dot,
   body.setup-run .col-menu,
   body.setup-run .col-meta{display:none}
-  body.setup-run .col-head hr{margin-top:22px}
+  body.setup-run .col-head hr{margin-top:16px}
+  .col-sub{display:none;margin:5px 0 0;font-size:13.5px;line-height:19px;color:var(--fg-2);letter-spacing:-.003em}
+  body.setup-run .col-sub{display:block}
 
 
   /* ================= Signals: the customer column ================= */
@@ -3342,7 +3344,7 @@
         <stop offset=".69" stop-color="#F2A4F2"/><stop offset="1" stop-color="#F9C391"/>
       </linearGradient></defs>
     </svg>
-    <h2>Your feed is ready</h2>
+    <h2>Your brand’s feed is ready</h2>
     <button class="lm" id="su-open" aria-label="Get started">
       <span class="lm-rim"><span class="lm-in">Get started
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -3773,6 +3775,15 @@
     // setup-only column: not in COL_ORDER, so it never joins the built deck or the nav
     about:      { name:'Brand Memory', dot:'#c0c0c0' }
   };
+  // one line under each column title while the feed is being built: what that
+  // column is collecting, said the way a CMO would want it said
+  const COL_SUB = {
+    about:      'Reading your brand into memory. Every agent is working from this.',
+    creatives:  'Reading your creative direction from what is already holding attention.',
+    ads:        'Going through your last thirty days of spend for what deserves more.',
+    storefront: 'Walking your store end to end, the way a customer would.',
+    visibility: 'Asking the AI assistants what they say when your category comes up.'
+  };
   const SECTOR_BY_AGENT = {
     creative:'creatives', performance:'ads', storefront:'storefront', visibility:'visibility'
   };
@@ -3952,6 +3963,7 @@
               </div>
             </span>
           </div>
+          ${COL_SUB[k] ? `<p class="col-sub">${COL_SUB[k]}</p>` : ''}
           <hr>
         </div>
         <div class="col-body">
@@ -5932,7 +5944,7 @@ const aboutCard = (p) => `
       return `
       <div class="src about-connect-row" data-ab-connect="${id}">
         <i class="src-ic">${c.icon}</i>
-        <span class="src-t"><b>${c.name}</b><span>${c.desc}</span></span>
+        <span class="src-t"><b>${c.desc}</b></span>
         <span class="src-state"><i class="src-spin"></i>Connecting</span>
         <button class="src-btn" data-ab-connect-go="${id}">Connect</button>
       </div>`;
@@ -6002,7 +6014,7 @@ const aboutCard = (p) => `
         at(1400, () => {
           row.classList.add('is-on');
           row.innerHTML = `<i class="src-ic">${c.icon}</i>
-            <span class="src-t"><b>${c.name}</b><span>${c.desc}</span></span>
+            <span class="src-t"><b>${c.name}</b></span>
             <span class="src-ok">Connected</span>`;
         });
       }
@@ -6051,6 +6063,7 @@ const aboutCard = (p) => `
               </div>
             </span>
           </div>
+          <p class="col-sub">${COL_SUB.about}</p>
           <hr>
         </div>
         <div class="col-body"></div>

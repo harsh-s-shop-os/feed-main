@@ -2,6 +2,11 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Onboarding: "Your brand's feed is ready"
+
+The finish-screen headline is now "Your brand's feed is ready" (was "Your feed is ready").
+
+
 ## 2026-09-18 — Brand Memory: discard on edits, no scrolling, fewer and clearer cards
 
 **Discard, not just save**
