@@ -1988,38 +1988,41 @@
   body.setup-run .card-body{padding-top:14px}
 
   .start{
-    position:fixed;inset:0;z-index:120;overflow:hidden;background:#000;
-    display:grid;place-items:center;padding:24px;
+    position:fixed;inset:0;z-index:120;overflow:hidden;background:var(--bg);
+    display:grid;align-items:start;justify-items:center;padding:128px 24px 24px;
   }
+  @media (max-height:820px){.start{padding-top:64px}}
+  @media (max-height:720px){.start{padding-top:32px}}
 
   .start-in{
-    position:relative;z-index:2;width:min(768px,100%);
+    position:relative;z-index:2;width:min(800px,100%);
     display:flex;flex-direction:column;align-items:flex-start;
   }
-  .start-mark{width:48px;height:53px;margin:0 0 28px;display:block;
+  .start-mark{width:29px;height:32px;margin:0 0 32px;display:block;
     opacity:0;transform:translateY(12px) scale(.94);
     animation:logoin .8s cubic-bezier(.22,.8,.3,1) .05s forwards}
   @keyframes logoin{to{opacity:1;transform:none}}
-  .start h1{margin:0 0 48px;font-size:28px;line-height:38px;font-weight:400;letter-spacing:-.015em;white-space:nowrap}
-  .start h1 span{display:block;margin-top:0;font-size:28px;line-height:38px;color:var(--fg-2)}
-  .start h1,.start .stack-in,.start .cta-go{opacity:0;transform:translateY(10px);animation:risein .7s cubic-bezier(.32,.72,0,1) forwards}
+  .start h1{margin:0 0 128px;font-size:32px;line-height:40px;font-weight:400;letter-spacing:-.015em;white-space:nowrap}
+  .start h1 span{display:block;margin-top:0;font-size:32px;line-height:40px;color:var(--fg-2)}
+  .start h1,.start .stack-in,.start .orows,.start .cta-go{opacity:0;transform:translateY(10px);animation:risein .7s cubic-bezier(.32,.72,0,1) forwards}
   .start h1{animation-delay:.16s}
   .start .stack-in{animation-delay:.28s}
+  .start .orows{animation-delay:.34s}
   .start .cta-go{animation-delay:.4s}
   @keyframes risein{to{opacity:1;transform:none}}
 
-  .stack-in{width:100%;display:flex;flex-direction:column;gap:12px;margin-bottom:48px}
+  .stack-in{width:100%;display:flex;flex-direction:column;gap:12px;margin-bottom:8px}
   .ofield{
-    display:flex;align-items:center;gap:16px;width:100%;padding:14px 16px;
-    border-radius:12px;background:#151515;border:1px solid #3a3a3a;cursor:text;
+    display:flex;align-items:center;gap:15px;width:100%;padding:11px 16px;
+    border-radius:14px;background:#151515;border:1px solid #202020;cursor:text;
     transition:border-color .18s,background .18s;
   }
   /* 3 — hovering lifts the whole field: border, icon and text together */
-  .ofield:hover{border-color:#5a5a5a;background:#181818}
-  .ofield:focus-within{background:#181818;border-color:#6b6b6b}
-  .ofield .globe{color:var(--fg-3);flex:0 0 auto;transition:color .18s}
-  .ofield:hover .globe,.ofield:focus-within .globe{color:var(--fg)}
-  .ofield:hover input::placeholder{color:#8f8f8f}
+  .ofield:hover{border-color:#262626;background:#171717}
+  .ofield:focus-within{background:#171717;border-color:#262626}
+  .ofield .oic{color:var(--fg-2);flex:0 0 auto;width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center;transition:color .18s,transform .2s cubic-bezier(.34,1.4,.64,1)}
+  .ofield:hover .oic,.ofield:focus-within .oic{color:var(--fg);transform:scale(1.12)}
+  .ofield:hover input::placeholder{color:#6b6b6b}
   .ofield .scheme{
     flex:0 0 auto;margin-right:-8px;font-size:16px;line-height:24px;color:#5a5a5a;
     font-variant-numeric:tabular-nums;letter-spacing:-.01em;transition:color .18s;
@@ -2029,36 +2032,33 @@
     flex:1;min-width:0;height:24px;border:0;background:transparent;outline:none;color:var(--fg);
     font:inherit;font-size:16px;line-height:24px;letter-spacing:-.01em;
   }
-  .ofield input::placeholder{color:#6b6b6b}
+  .ofield input::placeholder{color:#525252}
   .oclear{
     flex:0 0 auto;width:24px;height:24px;border:0;border-radius:50%;background:transparent;
     color:var(--fg-3);display:none;place-items:center;cursor:pointer;transition:background .15s,color .15s;
   }
   .oclear.on{display:grid}
   .oclear:hover{background:#242424;color:var(--fg)}
-  .osub{
-    margin:12px 2px 0;font-size:14px;line-height:21px;color:var(--fg-3);
-  }
-  .osub button{
-    border:0;background:transparent;padding:0;cursor:pointer;color:var(--fg-2);
-    font:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#4a4a4a;
-    transition:color .15s,text-decoration-color .15s;
-  }
-  .osub button:hover{color:var(--fg);text-decoration-color:var(--fg)}
   .orow{
-    display:flex;align-items:center;gap:16px;width:100%;padding:12px 16px;
+    display:flex;align-items:center;gap:15px;width:100%;padding:12px 16px;
     border:0;border-radius:12px;background:transparent;color:var(--fg-2);
     font:inherit;font-size:16px;line-height:24px;text-align:left;cursor:pointer;
     transition:background .15s,color .15s;
   }
-  .orow svg{flex:0 0 auto;transition:color .15s,transform .2s cubic-bezier(.32,.72,0,1)}
+  .orow .oic{flex:0 0 auto;width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center;transition:color .15s,transform .2s cubic-bezier(.34,1.4,.64,1)}
   .orow:hover{background:#151515;color:var(--fg)}
-  .orow:hover svg{transform:translateX(2px)}
+  .orow:hover .oic{transform:scale(1.12)}
+  .orows{
+    display:flex;flex-direction:column;width:100%;margin:0 0 128px;
+    overflow:hidden;max-height:140px;opacity:1;
+    transition:max-height .22s cubic-bezier(.32,.72,0,1),opacity .18s ease,margin .22s cubic-bezier(.32,.72,0,1);
+  }
+  .orows.hidden{max-height:0;opacity:0;margin:0 0 120px;pointer-events:none}
   .cta-go{
     position:relative;overflow:hidden;
-    display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 22px;
+    display:inline-flex;align-items:center;gap:9px;height:48px;padding:0 12px 0 16px;
     border:0;border-radius:14px;color:#0a0a0a;
-    background:linear-gradient(180deg,#ffffff 0%,#e8e8e8 100%);
+    background:#fafafa;
     font:inherit;font-size:16px;font-weight:550;cursor:pointer;
     box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 10px 30px rgba(0,0,0,.45);
     transition:transform .14s cubic-bezier(.34,1.4,.64,1),box-shadow .2s;
@@ -2066,9 +2066,11 @@
   .cta-go:hover{transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 16px 40px rgba(0,0,0,.55)}
   .cta-go:active{transform:translateY(0) scale(.985)}
   .cta-go .spk{color:#0a0a0a}
+  .cta-chev{flex:0 0 auto;transition:transform .2s cubic-bezier(.34,1.4,.64,1)}
+  .cta-go:hover .cta-chev{transform:translateX(2px)}
 
   /* the agents arrive inside the button, which widens to make room for them */
-  .cta-wrap{position:relative;display:inline-block}
+  .cta-wrap{position:relative;display:block}
   .cta-ags{
     display:flex;align-items:center;overflow:hidden;
     max-width:0;margin-left:0;
@@ -2091,21 +2093,97 @@
   @media (prefers-reduced-motion:reduce){
     .cta-ags,.cta-ags img{transition:none}
   }
+  /* ---------- step 2: pick a brand to watch ShopOS work on ---------- */
+  .start .ostep{width:100%}
+  /* the headline block never moves between steps: the back row takes part of its gap */
+  .start.on-brand h1{margin-bottom:72px}
+  .start.on-noproduct h1{margin-bottom:66px}
+  .backrow{margin-bottom:8px}
+  #step-noproduct .backrow{margin-bottom:12px}
+
+  .bgrid{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-bottom:128px}
+  .bcard{
+    display:flex;align-items:center;gap:16px;height:72px;padding:0 32px;
+    border:1px solid #262626;border-radius:12px;background:transparent;
+    color:var(--fg);font:inherit;font-size:16px;line-height:24px;text-align:left;cursor:pointer;
+    transition:background .16s,border-color .16s;
+  }
+  .bcard:hover{background:#171717;border-color:#333333}
+  .bcard.on{background:#262626;border-color:#404040}
+  .bradio{
+    position:relative;flex:0 0 auto;width:20px;height:20px;
+    border-radius:50%;border:1.5px solid #404040;background:#171717;
+  }
+  .bradio::after{
+    content:"";position:absolute;inset:0;margin:auto;width:14px;height:14px;
+    border-radius:50%;border:2px solid var(--fg);
+    opacity:0;transform:scale(.55);
+    transition:opacity .16s ease,transform .24s cubic-bezier(.34,1.5,.5,1);
+  }
+  .bcard.on .bradio::after{opacity:1;transform:none}
+
+  /* the two footer buttons share one grid so they come out the same width */
+  .cta-row{display:grid;grid-auto-flow:column;grid-auto-columns:max-content;gap:16px;width:max-content}
+  .cta-alt{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;height:48px;padding:0 16px;
+    border:0;border-radius:14px;background:#262626;color:#d4d4d4;overflow:hidden;
+    font:inherit;font-size:16px;font-weight:550;white-space:nowrap;cursor:pointer;
+    transition:background .15s,color .15s;
+  }
+  .cta-alt:hover{background:#2e2e2e;color:var(--fg)}
+  .cta-alt svg{flex:0 0 auto;transition:transform .2s cubic-bezier(.34,1.4,.64,1)}
+  .cta-alt:hover svg{transform:translateX(-2px)}
+  .cta-alt.in{animation:altin .34s cubic-bezier(.32,.72,0,1) both}
+  @keyframes altin{from{opacity:0;transform:translateX(-10px)}}
+
+  /* only what changes moves: the label crossfades, the logo and line 1 sit still */
+  #start-sub,.cta-label{transition:opacity .16s ease,transform .22s cubic-bezier(.32,.72,0,1)}
+  #start-sub.swap,.cta-label.swap{opacity:0;transform:translateY(-5px)}
+  .ostep.leaving{animation:stepout .18s cubic-bezier(.32,.72,0,1) forwards}
+  @keyframes stepout{to{opacity:0;transform:translateY(-8px)}}
+  .ostep.entering > *{opacity:0;transform:translateY(10px);animation:risein .38s cubic-bezier(.32,.72,0,1) forwards}
+  .ostep.entering > *:nth-child(2){animation-delay:.06s}
+  @media (prefers-reduced-motion:reduce){
+    .ostep.leaving,.ostep.entering > *,.cta-alt.in{animation-duration:.01s}
+  }
+
+  /* ---------- step 1b: no brand yet — a short, one-question-at-a-time wizard ---------- */
+  /* same row shell as .orow, but not a button: only the icon inside is clickable */
+  .orow-static{display:flex;align-items:flex-start;gap:15px;width:100%;padding:12px 16px;color:var(--fg-2);font:inherit;font-size:16px;line-height:24px}
+  .orow-static .oic{flex:0 0 auto;width:21px;height:21px;display:inline-flex;align-items:center;justify-content:center}
+  .oic-btn{flex:0 0 auto;width:21px;height:21px;padding:0;border:0;background:transparent;color:inherit;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,transform .2s cubic-bezier(.34,1.4,.64,1)}
+  .oic-btn:hover{color:var(--fg);transform:scale(1.12)}
+
+  .qwrap{display:flex;flex-direction:column;width:100%;padding:0 16px}
+  .qrow{display:flex;flex-direction:column;width:100%;margin-bottom:16px}
+  .qrow:last-child{margin-bottom:128px}
+  .qhead{display:flex;align-items:flex-start;gap:15px;width:100%;min-height:24px}
+  .qhead .oic{flex:0 0 auto;width:21px;height:21px;margin-top:-1px;display:inline-flex;align-items:center;justify-content:center;color:var(--fg-2)}
+  .qlabel{flex:1;min-width:0;color:var(--fg);font-size:16px;line-height:24px}
+  .qedit{flex:0 0 auto;width:21px;height:21px;padding:0;border:0;background:transparent;color:var(--fg-2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s,transform .2s cubic-bezier(.34,1.4,.64,1)}
+  .qedit:hover{color:var(--fg);transform:scale(1.12)}
+  .qanswer{margin:4px 0 0 36px;color:#525252;font-size:16px;line-height:24px}
+  .qrow .pfield-row{margin-top:10px}
+  .qrow.open{margin-top:12px}
+  .pfield-row{display:flex;align-items:center;gap:16px;width:100%}
+  /* no icon in this field, but its text still lands on the same column as every label above it */
+  .pfield-row .ofield{flex:1;padding-left:35px}
+  .qrow.in{animation:risein .34s cubic-bezier(.32,.72,0,1) both}
+  @media (prefers-reduced-motion:reduce){.qrow.in{animation-duration:.01s}}
+
   .start.out{pointer-events:none}
 
   /* leaving: everything on the first screen lifts away, one after another */
   .start.out .start-mark,
   .start.out h1,
-  .start.out .stack-in,
-  .start.out .cta-wrap,
-  .start.out .osub{
+  .start.out .ostep,
+  .start.out .cta-row{
     animation:liftout .44s cubic-bezier(.32,.72,0,1) forwards;
   }
   .start.out .start-mark{animation-delay:0s}
   .start.out h1        {animation-delay:.04s}
-  .start.out .stack-in {animation-delay:.08s}
-  .start.out .cta-wrap {animation-delay:.12s}
-  .start.out .osub     {animation-delay:.16s}
+  .start.out .ostep    {animation-delay:.08s}
+  .start.out .cta-row  {animation-delay:.14s}
   @keyframes liftout{to{opacity:0;transform:translateY(-26px)}}
 
   /* arriving: the setup screen comes up from below on the same curve */
@@ -2136,7 +2214,7 @@
   @keyframes feedin{from{opacity:0;transform:translateY(22px)}}
   @keyframes risein2{to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){
-    .start.out .start-mark,.start.out h1,.start.out .stack-in,.start.out .cta-wrap,.start.out .osub,
+    .start.out .start-mark,.start.out h1,.start.out .ostep,.start.out .cta-row,
     body.setup-run .deck-side > *,body.setup-run .deck .col{animation-duration:.01s}
   }
 
@@ -2735,15 +2813,18 @@
       </linearGradient></defs>
     </svg>
 
-    <h1>Get a team for your brand that works while you sleep.<span>Let’s start with your URL.</span></h1>
+    <h1>Get a team for your Brand.<span id="start-sub">Enter a Brand URL &amp; we’ll set everything up!</span></h1>
 
+    <div class="ostep" id="step-url">
     <div class="stack-in">
       <form class="ofield" id="start-form">
-        <svg class="globe" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-        <input id="start-url" type="text" inputmode="url" placeholder="examplestore.com" autocomplete="off" spellcheck="false">
+        <span class="oic">
+          <svg class="globe" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </span>
+        <input id="start-url" type="text" inputmode="url" placeholder="Enter your store URL" autocomplete="off" spellcheck="false">
         <button class="oclear" id="start-clear" type="button" aria-label="Clear">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
@@ -2751,18 +2832,53 @@
 
     </div>
 
+    <div class="orows">
+      <button class="orow" type="button" id="start-demo">
+        <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+        See ShopOS in action
+      </button>
+      <button class="orow" type="button" id="start-nobrand">
+        <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span>
+        I don’t have a Brand
+      </button>
+    </div>
+    </div>
+
+    <div class="ostep" id="step-brand" hidden>
+      <button class="orow backrow" type="button" id="brand-back">
+        <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></span>
+        See ShopOS in action
+      </button>
+      <div class="bgrid" id="bgrid"></div>
+    </div>
+
+    <div class="ostep" id="step-noproduct" hidden>
+      <div class="orow-static backrow">
+        <button class="oic-btn" type="button" id="nobrand-back" aria-label="Back">
+          <span class="oic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg></span>
+        </button>
+        <span>Describe your new Brand</span>
+      </div>
+      <div class="qwrap" id="qwrap"></div>
+    </div>
+
+    <div class="cta-row" id="cta-row">
+    <button class="cta-alt" type="button" id="start-own" hidden>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      <span class="alt-label">Try your own Brand</span>
+    </button>
     <span class="cta-wrap">
-      <button class="cta-go" id="start-go" type="button">Build My Team
+      <button class="cta-go" id="start-go" type="button"><span class="cta-label">Build My Team</span>
         <span class="cta-ags" aria-hidden="true">
           <img src="assets/agent-creative.svg" alt="">
           <img src="assets/agent-performance.svg" alt="">
           <img src="assets/agent-visibility.svg" alt="">
           <img src="assets/agent-storefront.svg" alt="">
         </span>
+        <svg class="cta-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </span>
-
-    <p class="osub">Don’t have a brand yet? <button type="button" id="start-fresh">Start a new brand</button></p>
+    </div>
   </div>
 </section>
 
@@ -5524,7 +5640,7 @@
           <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
         </svg>
-        <span class="host">${BRAND.fresh ? 'A brand new store' : BRAND.host}</span>
+        <span class="host">${BRAND.fresh ? BRAND.name : BRAND.host}</span>
         <button class="su-x" id="su-x" aria-label="Start over">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
@@ -5748,11 +5864,214 @@
     const urlEl = $('start-url');
     const submit = () => begin(urlEl.value.trim() || 'urbanperformance.com', false);
     $('start-form').addEventListener('submit', (e) => { e.preventDefault(); submit(); });
-    $('start-go').addEventListener('click', submit);
-    $('start-fresh').addEventListener('click', () => begin('a-new-brand.com', true));
-    urlEl.addEventListener('input', () => $('start-clear').classList.toggle('on', !!urlEl.value));
+
+    // clicking anywhere in an .ofield (padding, icon) focuses its input, not just the input's own box
+    document.addEventListener('click', (e) => {
+      const field = e.target.closest('.ofield');
+      if (!field || e.target.closest('button')) return;
+      field.querySelector('input')?.focus();
+    });
+
+    /* ---- "See ShopOS in action": pick a brand, then the same setup runs on it ---- */
+    const DEMO_BRANDS = ['Dunder Mifflin', 'Los Pollos Hermanos', 'Chocolate Frogs',
+                         'Fishwife', 'Miu Miu', 'Vacation Inc.', 'Dorsey'];
+    const SUB_URL   = 'Enter a Brand URL &amp; we\u2019ll set everything up!';
+    const SUB_BRAND = 'Select a Brand and we\u2019ll show what we can do!';
+    let demoPick = 0, onBrand = false;
+
+    const subEl = $('start-sub'), ctaRow = $('cta-row'), altBtn = $('start-own');
+    const ctaLabel = document.querySelector('.cta-label');
+    const ctaWrap = document.querySelector('.cta-wrap');
+    const stepUrl = $('step-url'), stepBrand = $('step-brand');
+
+    $('bgrid').innerHTML = DEMO_BRANDS.map((n, i) =>
+      `<button class="bcard${i === 0 ? ' on' : ''}" type="button" data-i="${i}"><span class="bradio"></span>${n}</button>`
+    ).join('');
+
+    // swap a line of text without moving anything around it
+    const swapText = (el, html) => {
+      if (!el) return;
+      el.classList.add('swap');
+      at(170, () => { el.innerHTML = html; el.classList.remove('swap'); });
+    };
+    // the row is width:max-content, so a longer brand name would snap it wider: ease it instead
+    const sizeRow = (animate) => {
+      const from = ctaRow.getBoundingClientRect().width;
+      ctaRow.style.transition = 'none'; ctaRow.style.width = 'max-content';
+      const to = ctaRow.getBoundingClientRect().width;
+      if (!animate || Math.abs(to - from) < 1) { ctaRow.style.width = ''; return; }
+      ctaRow.style.width = from + 'px';
+      requestAnimationFrame(() => {
+        ctaRow.style.transition = 'width .34s cubic-bezier(.32,.72,0,1)';
+        ctaRow.style.width = to + 'px';
+      });
+      at(380, () => { ctaRow.style.transition = ''; ctaRow.style.width = ''; });
+    };
+    // the primary button keeps its identity across the step: it slides to its new slot
+    const slideCta = (mutate) => {
+      const before = ctaWrap.getBoundingClientRect().left;
+      mutate();
+      const dx = before - ctaWrap.getBoundingClientRect().left;
+      if (Math.abs(dx) < 1) return;
+      ctaWrap.style.transition = 'none';
+      ctaWrap.style.transform = `translateX(${dx}px)`;
+      requestAnimationFrame(() => {
+        ctaWrap.style.transition = 'transform .42s cubic-bezier(.32,.72,0,1)';
+        ctaWrap.style.transform = '';
+      });
+      at(460, () => { ctaWrap.style.transition = ''; ctaWrap.style.transform = ''; });
+    };
+
+    const goStep = (toBrand) => {
+      if (onBrand === toBrand) return;
+      onBrand = toBrand;
+      const leaving = toBrand ? stepUrl : stepBrand;
+      const arriving = toBrand ? stepBrand : stepUrl;
+
+      swapText(subEl, toBrand ? SUB_BRAND : SUB_URL);
+      swapText(ctaLabel, toBrand ? `Build for ${DEMO_BRANDS[demoPick]}` : 'Build My Team');
+
+      // the layout only changes once the outgoing body is already invisible, so nothing
+      // above it ever shifts: the logo and headline sit perfectly still through the swap
+      leaving.classList.add('leaving');
+      at(180, () => {
+        slideCta(() => {
+          leaving.classList.remove('leaving');
+          leaving.hidden = true;
+          arriving.hidden = false;
+          startEl.classList.toggle('on-brand', toBrand);
+          altBtn.hidden = !toBrand;
+        });
+        arriving.classList.remove('entering'); void arriving.offsetWidth;
+        arriving.classList.add('entering');
+        at(460, () => arriving.classList.remove('entering'));
+        if (toBrand) { altBtn.classList.remove('in'); void altBtn.offsetWidth; altBtn.classList.add('in'); }
+      });
+    };
+
+    $('start-demo').addEventListener('click', () => goStep(true));
+    $('brand-back').addEventListener('click', () => goStep(false));
+    altBtn.addEventListener('click', () => goStep(false));
+    $('bgrid').addEventListener('click', (e) => {
+      const card = e.target.closest('.bcard'); if (!card) return;
+      demoPick = +card.dataset.i;
+      $('bgrid').querySelectorAll('.bcard').forEach(c => c.classList.toggle('on', c === card));
+      swapText(ctaLabel, `Build for ${DEMO_BRANDS[demoPick]}`);
+      at(170, () => sizeRow(true));
+    });
+
+    // a demo brand is not a real store, so name it outright instead of reading it off a host
+    const beginBrand = (name) => {
+      begin(name.toLowerCase().replace(/[^a-z0-9]+/g, '') + '.com', false);
+      BRAND.name = name;
+    };
+    $('start-go').addEventListener('click', () => onBrand ? beginBrand(DEMO_BRANDS[demoPick]) : submit());
+
+    /* ---- "I don't have a Brand": a 3-question wizard, one open question at a time ---- */
+    const stepNoProduct = $('step-noproduct');
+    const qwrapEl = $('qwrap');
+    const QUESTIONS = [
+      { id: 'product',  label: 'What\u2019s your product?',       placeholder: 'enter product idea' },
+      { id: 'audience', label: 'Who is your audience?',           placeholder: 'enter your audience' },
+      { id: 'name',     label: 'What should we call your Brand?', placeholder: 'enter a brand name' },
+    ];
+    const qIcon = '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>';
+    const qPencil = '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>';
+    const qEsc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let qAnswers = ['', '', ''];
+    let qActive = 0;
+
+    // only the currently-open question shows an input; earlier ones show their answer + a pencil to reopen them
+    const renderQuestions = (animateIn) => {
+      qwrapEl.innerHTML = QUESTIONS.map((q, i) => {
+        if (i > qActive) return '';
+        if (i < qActive) {
+          return `<div class="qrow answered" data-i="${i}">
+            <div class="qhead">
+              <span class="oic">${qIcon}</span>
+              <span class="qlabel">${q.label}</span>
+              <button class="qedit" type="button" data-i="${i}" aria-label="Edit answer">${qPencil}</button>
+            </div>
+            <div class="qanswer">${qEsc(qAnswers[i])}</div>
+          </div>`;
+        }
+        return `<div class="qrow open${animateIn ? ' in' : ''}" data-i="${i}">
+          <div class="qhead">
+            <span class="oic">${qIcon}</span>
+            <span class="qlabel">${q.label}</span>
+          </div>
+          <form class="pfield-row" data-i="${i}">
+            <div class="ofield"><input type="text" placeholder="${q.placeholder}" value="${qEsc(qAnswers[i])}" autocomplete="off" spellcheck="false"></div>
+            <button class="cta-go" type="submit"><span class="cta-label">Next</span></button>
+          </form>
+        </div>`;
+      }).join('');
+      qwrapEl.querySelector('.qrow.open input')?.focus();
+    };
+
+    qwrapEl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target.closest('form.pfield-row');
+      if (!form) return;
+      const i = +form.dataset.i;
+      const input = form.querySelector('input');
+      const v = input.value.trim();
+      // an answer is required before moving on — no info, no advance
+      if (!v) { input.focus(); return; }
+      qAnswers[i] = v;
+      if (i === QUESTIONS.length - 1) { begin('a-new-brand.com', true); BRAND.name = v; return; }
+      qActive = i + 1;
+      renderQuestions(true);
+    });
+    qwrapEl.addEventListener('click', (e) => {
+      // reopening an earlier question drops everything after it back out of view
+      const editBtn = e.target.closest('.qedit');
+      if (!editBtn) return;
+      qActive = +editBtn.dataset.i;
+      renderQuestions(false);
+    });
+
+    let onNoProduct = false;
+    const goNoProduct = (toNP) => {
+      if (onNoProduct === toNP) return;
+      onNoProduct = toNP;
+      const leaving = toNP ? stepUrl : stepNoProduct;
+      const arriving = toNP ? stepNoProduct : stepUrl;
+      // the headline and its subtitle sit still here — only the body below swaps
+      leaving.classList.add('leaving');
+      at(180, () => {
+        leaving.classList.remove('leaving');
+        leaving.hidden = true;
+        arriving.hidden = false;
+        startEl.classList.toggle('on-noproduct', toNP);
+        ctaRow.hidden = toNP;
+        arriving.classList.remove('entering'); void arriving.offsetWidth;
+        arriving.classList.add('entering');
+        at(460, () => arriving.classList.remove('entering'));
+      });
+    };
+    $('start-nobrand').addEventListener('click', () => {
+      qAnswers = ['', '', '']; qActive = 0;
+      renderQuestions(false);
+      goNoProduct(true);
+    });
+    $('nobrand-back').addEventListener('click', () => goNoProduct(false));
+    const urlCharRe = /[^A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]/g;
+    const looksLikeUrl = (v) => /^(https?:\/\/)?([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}([:/?#].*)?$/i.test(v.trim());
+    const orowsEl = document.querySelector('.orows');
+    urlEl.addEventListener('input', () => {
+      const cleaned = urlEl.value.replace(urlCharRe, '');
+      if (cleaned !== urlEl.value) {
+        const pos = urlEl.selectionStart - (urlEl.value.length - cleaned.length);
+        urlEl.value = cleaned;
+        urlEl.setSelectionRange(pos, pos);
+      }
+      $('start-clear').classList.toggle('on', !!urlEl.value);
+      if (orowsEl) orowsEl.classList.toggle('hidden', looksLikeUrl(urlEl.value));
+    });
     $('start-clear').addEventListener('click', () => {
       urlEl.value = ''; $('start-clear').classList.remove('on'); urlEl.focus();
+      if (orowsEl) orowsEl.classList.remove('hidden');
     });
 
 
