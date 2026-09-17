@@ -2,6 +2,20 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Brand Memory: editable, scrollable cards during loading
+
+**The first column of the loading state ("Brand Memory") is now editable**
+Each card is a fixed height and scrolls inside itself if the copy runs long, so editing one card never pushes the others down the column. A pencil icon in the top-right corner opens editing — click it and the card's description becomes an input; click the checkmark (or press Enter) to save, or press Escape to cancel. A soft fade at the bottom of a card is the cue that there's more to scroll to.
+
+**New: generic, reusable card titles**
+Card titles are no longer one-off headlines specific to a single demo brand (e.g. "The Flex henley is leading the brand right now"). They're now a fixed set of category labels — "About the brand," "Product information," "Business landscape," "Growth direction" — that make sense for any brand ShopOS reads. The label stays put; only the finding underneath it (what was actually read off the store) is what gets edited.
+
+**Only text cards are editable**
+The Brand Kit card (logo, colors, typeface swatches) carries no edit icon — it isn't a text finding, so there's nothing to type into.
+
+**Confirmed: this column only ever appears during loading**
+It's built fresh each time onboarding runs and is never carried into the finished feed — nothing else needed to change here, but flagging it since it came up as a question this session.
+
 ## 2026-09-17 — Onboarding flow: two new paths, a product-first wizard, and polish
 
 **New: two more ways to start, right on the first screen**
