@@ -2,6 +2,27 @@
 
 Human-readable log of what changed in the onboarding prototype, for product review. Updated at each local commit — most recent first.
 
+## 2026-09-18 — Brand Memory: discard on edits, no scrolling, fewer and clearer cards
+
+**Discard, not just save**
+Editing a card now shows a check and a cross, not just a check. Check keeps what you typed; the cross puts the card back exactly as it was — text and any tags you removed while editing.
+
+**Toned down the edit chrome**
+No background box behind the text you're editing, and no background on the check/cross buttons — just the icons, so editing doesn't call more attention to itself than the card's content does.
+
+**Tag crosses only take up space while the card is being edited**
+A tag pill used to reserve room for its remove-cross at all times (revealed on hover). Now the cross has zero width until the card enters editing state, then the pill opens up to show it. No dead space on cards you're not touching.
+
+**Dropped the fixed-height, scrolling cards**
+Cards were pinned to one height with an internal scrollbar; nothing in them was ever long enough to need it. Cards now size to their own content — short cards are short, longer ones are taller.
+
+**Fewer cards, clearer purpose**
+Cut Pricing, Channels, Drops and collections, standalone Business landscape, Growth direction, and the "Still missing" card. Merged the two Product information cards into one. Company now carries a bit more of what Business landscape used to say, since that's where it belongs. Catalog is now "Product catalog" and says plainly what's being pulled together. Audience keeps its text, loses its (repetitive) tags. Competitors keeps its tags, loses its description — just the names. Voice and tone moved up next to the new "Brand guidelines" card (the old untitled Brand Kit card now has a name). Nine cards total, down from fifteen.
+
+**New: a Shopify connect row**
+Reuses the exact connector-row shape from the Signals column — logo, name, one line, a white Connect button — with copy written for this moment ("Connect Shopify for detailed product analytics."). It's the one card in the column that isn't a finding, so it carries no edit icon; clicking Connect gives it its own short, self-contained "Connecting → Connected" state.
+
+
 ## 2026-09-18 — Brand Memory: editable, scrollable cards during loading
 
 **The first column of the loading state ("Brand Memory") is now editable**

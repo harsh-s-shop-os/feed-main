@@ -901,30 +901,10 @@
      These cards exist only while ShopOS is reading the store, to show what it
      is learning; they never appear in the finished feed. So they carry no
      agent name, no actions and no media — just the mark on the title line and
-     the copy. Every text card is the same height and scrolls inside itself, so
-     the column stays a tidy stack however much the copy is edited. */
-  :root{--ab-h:132px}
-  /* the column body is a flex column, and a card with an inner scroller can be
-     squeezed below its own height — pin both the card and its skeleton */
-  .about-card{padding:14px 16px 16px;flex:0 0 auto;position:relative}
-  /* a soft fade at the bottom edge, shown only while there is more to scroll to —
-     the cue that this card's copy keeps going, not a rendering cut-off */
-  .ab-fade{
-    position:absolute;left:16px;right:16px;bottom:16px;height:26px;
-    background:linear-gradient(to bottom, transparent, var(--card));
-    pointer-events:none;opacity:0;transition:opacity .15s ease;border-radius:0 0 12px 12px;
-  }
-  .about-card.is-scrollable .ab-fade{opacity:1}
-  .about-card.is-scrollable.at-bottom .ab-fade{opacity:0}
-  .about-card .ab-scroll{
-    height:var(--ab-h);overflow-y:auto;overscroll-behavior:contain;
-    display:flex;flex-direction:column;gap:6px;
-    padding-right:6px;margin-right:-6px;
-  }
-  /* the brand-kit card is not text, so it sizes to its swatches instead */
-  .about-card.has-kit .ab-scroll{height:auto;overflow:visible;padding-right:0;margin-right:0}
-  .about-card .ab-scroll::-webkit-scrollbar{width:6px}
-  .about-card .ab-scroll::-webkit-scrollbar-thumb{background:#242424;border-radius:4px}
+     the copy. Cards size to their own content — some are short, some run
+     longer — nothing here is clipped or scrolled. */
+  .about-card{padding:14px 16px 16px}
+  .about-card .ab-scroll{display:flex;flex-direction:column;gap:6px}
   .about-card .kit{margin:8px 0 2px}
   .ab-head{display:flex;align-items:flex-start;gap:8px}
   .ab-title{
@@ -934,60 +914,69 @@
   }
   .ab-mark{width:22px;height:22px;flex:0 0 auto;display:block;margin-top:1px}
   .ab-sub{font-size:14px;font-weight:400;line-height:20px;color:var(--fg-2);margin:0}
-  /* icon-only, and always the same colour whether idle, hovered or active — never
-     a different colour per state (this control has no label to keep in step with,
-     but the rule is the same one: one colour for this control, in every state) */
-  .ab-editbtn{
-    flex:0 0 auto;width:26px;height:26px;margin-top:-2px;border:0;border-radius:7px;
+  /* icon-only, and quiet in every state — no background box, just the icon
+     itself, so the control never competes with the finding underneath it */
+  .ab-actions{flex:0 0 auto;display:flex;gap:2px;margin-top:-2px}
+  .ab-btn{
+    width:26px;height:26px;border:0;border-radius:7px;
     background:transparent;color:var(--fg-3);cursor:pointer;
     display:grid;place-items:center;
   }
-  .ab-editbtn:hover{background:rgba(255,255,255,.07);color:var(--fg-3)}
-  .about-card.editing .ab-editbtn{background:rgba(255,255,255,.09);color:var(--fg-3)}
-  /* the description becomes the input the moment editing starts */
-  .ab-sub[contenteditable]{
-    outline:none;border-radius:6px;margin:0 -6px;padding:2px 6px;cursor:text;
-    background:rgba(255,255,255,.05);box-shadow:0 0 0 1px var(--line-soft);
-  }
+  .ab-btn:hover{color:var(--fg-2)}
+  /* editing is just a text cursor — no box, no highlight */
+  .ab-sub[contenteditable]{outline:none;cursor:text}
 
-  /* short facts read off the store: competitors, category, the brand in a word.
-     The cross only shows on the tag under the cursor, so the row stays quiet. */
+  /* short facts read off the store: competitors, category, the brand in a word */
   .ab-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
   .ab-tag{
-    display:inline-flex;align-items:center;gap:5px;
+    display:inline-flex;align-items:center;
     padding:4px 9px;border-radius:999px;
     background:#202020;border:1px solid var(--line-soft);
     font-size:12.5px;line-height:17px;color:var(--fg-2);
     transition:background .15s,color .15s;
   }
   .ab-tag:hover{background:#272727;color:var(--fg)}
+  /* the cross takes no space at all until the card is in editing state, then
+     the pill opens up to make room for it — never a hover-only reveal */
   .ab-tag-x{
-    width:15px;height:15px;margin-right:-3px;padding:0;border:0;border-radius:50%;
-    background:transparent;color:inherit;cursor:pointer;
-    display:grid;place-items:center;
-    opacity:0;transform:scale(.75);
-    transition:opacity .14s ease,transform .14s cubic-bezier(.34,1.4,.64,1),background .14s;
+    width:0;height:15px;margin-left:0;padding:0;border:0;border-radius:50%;
+    background:transparent;color:inherit;cursor:pointer;overflow:hidden;
+    display:inline-flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:width .15s ease,opacity .12s ease,margin-left .15s ease;
   }
-  .ab-tag:hover .ab-tag-x{opacity:.7;transform:none}
+  .about-card.editing .ab-tag-x{width:15px;opacity:.7;margin-left:5px;pointer-events:auto}
   .ab-tag-x:hover{opacity:1;background:rgba(255,255,255,.12)}
-  .ab-sub.ab-edit{margin:0 -6px;padding:2px 6px}
+  /* a competitor carries its own mark, the way a favicon sits next to a domain */
+  .ab-tag-dot{width:14px;height:14px;border-radius:4px;flex:0 0 auto;margin-left:-2px}
+  /* a gap is not a fact yet, so it reads as an invitation rather than a chip */
+  .ab-tag.is-gap{background:transparent;border:1px dashed #333;color:var(--fg-3)}
+  .ab-tag.is-gap:hover{border-color:#3f3f3f;color:var(--fg-2)}
+  .ab-tag.is-gap svg{opacity:.8}
 
-  /* media — single */
-  .media{position:relative;width:100%;aspect-ratio:500/444;background:var(--surface-muted,#262626);overflow:hidden}
+  /* the one non-editable, non-finding card in the column: a data-source nudge,
+     reusing the Signals connector row exactly (icon, name + one line, a white
+     Connect button) rather than inventing a new card shape for it */
+  .about-connect-row{opacity:0;transform:translateY(5px);transition:opacity .4s ease,transform .4s ease}
+  .about-connect-row.in{opacity:1;transform:none}
+
+  /* media — single.
+     Anything that isn't landscape sits in a square frame: square art fits it
+     exactly, portrait art fills it (cover crops top/bottom). Landscape keeps
+     its own ratio for now. Carousels use the same box — no separate sizing,
+     because a slide is now the full width of the frame. */
+  .media{position:relative;width:100%;aspect-ratio:1/1;background:var(--surface-muted,#262626);overflow:hidden}
   .media[data-r="square"]{aspect-ratio:1/1}
-  .media[data-r="4:5"]{aspect-ratio:4/5}
+  .media[data-r="4:5"]{aspect-ratio:1/1}
   .media[data-r="wide"]{aspect-ratio:1800/942}
-  /* in a carousel each slide is 86% wide, so the box is sized off the slide,
-     not the card, or cover() crops the artwork's own headline off */
-  .media.is-carousel[data-r="square"]{aspect-ratio:100/86}
-  .media.is-carousel[data-r="4:5"]{aspect-ratio:1000/1075}
-  .media.is-carousel[data-r="wide"]{aspect-ratio:1000/450}
   .media img{width:100%;height:100%;object-fit:cover;display:block}
 
-  /* media — carousel: current slide + peek of the next */
+  /* media — carousel: one slide fills the frame, Instagram style.
+     No peek of the next slide, no gutter between slides — the dots and the
+     arrows are what say "there's more here". */
   .media.is-carousel{overflow:hidden}
   .track{
-    display:flex;gap:12px;height:100%;
+    display:flex;gap:0;height:100%;
     background:var(--surface-muted,#262626);
     overflow-x:auto;overflow-y:hidden;
     scroll-snap-type:x mandatory;
@@ -996,7 +985,7 @@
   }
   .track::-webkit-scrollbar{display:none}
   .track .slide{
-    flex:0 0 86%;height:100%;
+    flex:0 0 100%;height:100%;
     scroll-snap-align:start;
     overflow:hidden;background:var(--surface-muted,#262626);
   }
@@ -1017,7 +1006,7 @@
   .nav-prev:hover svg{transform:translateX(-2px)}
   .nav[hidden]{display:none}
   .nav-prev{left:12px}
-  .nav-next{right:18px}
+  .nav-next{right:12px}
 
   /* media — activity rings (brand health) */
   .ringwrap{
@@ -1992,18 +1981,20 @@
   .sk-head{display:flex;align-items:center;gap:10px;padding:12px;height:56px}
   .sk-avatar{width:32px;height:32px;border-radius:50%;flex:0 0 auto}
   .sk-name{width:140px;height:12px}
-  .sk-media{width:100%;aspect-ratio:500/444;border-radius:0}
+  .sk-media{width:100%;aspect-ratio:1/1;border-radius:0}
   .sk-row{display:flex;align-items:center;gap:12px;padding:16px}
   .sk-dot{width:20px;height:20px;border-radius:6px}
   .sk-body{padding:0 16px;display:flex;flex-direction:column;gap:10px}
   .sk-line{height:12px}
   .sk-bar{width:100%;height:36px;border-radius:0}
   /* matches .about-card exactly, so nothing jumps when the copy lands */
-  .about-skeleton{padding:14px 16px 16px;flex:0 0 auto}
-  .about-skeleton .sk-ab{height:var(--ab-h);display:flex;flex-direction:column;gap:10px;overflow:hidden}
-  .about-skeleton.has-kit .sk-ab{height:auto}
+  .about-skeleton{padding:14px 16px 16px}
+  .about-skeleton .sk-ab{display:flex;flex-direction:column;gap:10px}
   .sk-ab-title{display:flex;align-items:center;gap:8px}
   .sk-mark{width:22px;height:22px;flex:0 0 auto;border-radius:6px}
+  /* the connect row's skeleton matches .src's own padding/radius, not a card's */
+  .about-skeleton.is-row{padding:13px 14px;border-radius:14px}
+  .sk-row-ab{display:flex;align-items:center;gap:12px}
   .sk-note{text-align:center;font-size:13px;color:var(--fg-3);padding:4px 0 0}
 
   /* ---------- modals ---------- */
@@ -3351,8 +3342,7 @@
         <stop offset=".69" stop-color="#F2A4F2"/><stop offset="1" stop-color="#F9C391"/>
       </linearGradient></defs>
     </svg>
-    <h2>ShopOS is ready for you.</h2>
-    <p class="credit">We are giving you <span class="n" id="su-credits">0</span> credits to get started.</p>
+    <h2>Your feed is ready</h2>
     <button class="lm" id="su-open" aria-label="Get started">
       <span class="lm-rim"><span class="lm-in">Get started
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -3588,7 +3578,7 @@
       </div>`;
   };
 
-  // chart panel | single full-bleed image | snap track with a peek of the next slide
+  // chart panel | single full-bleed image | full-width snap track, one slide at a time
   const media = (p) => {
     if (p.rings) return ringPanel(p.rings);
     if (p.chart) return chart(p.chart);
@@ -4518,7 +4508,7 @@
     const prev = cardEl.querySelector('.nav-prev');
     const next = cardEl.querySelector('.nav-next');
     const pips = [...cardEl.querySelectorAll('.dots i')];
-    const step = () => track.querySelector('.slide').offsetWidth + 12;
+    const step = () => track.querySelector('.slide').offsetWidth;
 
     const sync = () => {
       const i = Math.round(track.scrollLeft / step());
@@ -5841,45 +5831,60 @@
     // never a one-off headline like "The Flex henley is leading the brand". That's
     // what lets a card be editable: the label stays put while the finding under it
     // (the part ShopOS actually read off this store) is what the user can correct.
-    const UP_ABOUT = [
+const UP_ABOUT = [
       { agent:'orchestrator', about:true, editable:true,
         title:'About the brand',
         sub:'Urban Performance is built for people who need their clothes to keep up: technical fabric with none of the gym-wear look, worn from a workout straight into the rest of the day.',
         tags:['Technical', 'Understated', 'Everyday'] },
       { agent:'orchestrator', about:true,
+        title:'Brand guidelines',
         brandkit:{ logo:'assets/brand-mark.jpg',
                    colors:['#1f2933', '#3e5c76', '#c9c2b6'],
                    type:{ sample:'TYPEFACE', name:'Inter' } } },
       { agent:'orchestrator', about:true, editable:true,
-        title:'Product information',
-        sub:'The Flex henley is the most-clicked product on the storefront: quick dry, wrinkle resist and four-way stretch, called out on the garment itself rather than buried in copy underneath it.' },
+        title:'Voice and tone',
+        sub:'Writes plain and specific: the claim, the fabric, the use. No hype words, no exclamation marks.',
+        tags:['Plain', 'Specific', 'No hype'] },
+      { agent:'orchestrator', about:true,
+        connect:'shopify' },
+      { agent:'orchestrator', about:true, editable:true,
+        title:'Company',
+        sub:'Founded in 2019, run out of Bengaluru, selling direct online with four walk-in stores across metro India, in a technical-menswear market crowded with brands leading on the same fabric claims.',
+        tags:['Founded 2019', 'Bengaluru', '4 stores', { t:'Add team size', gap:true }] },
+      { agent:'orchestrator', about:true, editable:true,
+        title:'Product catalog',
+        sub:'212 products being pulled into one catalog across five families, restocked season to season rather than replaced.',
+        tags:['Tees', 'Henleys', 'Chinos', 'Outerwear', 'Caps'] },
       { agent:'orchestrator', about:true, editable:true,
         title:'Product information',
-        sub:'Every core piece carries the same three performance claims, backed by fabric callouts on the product photography rather than marketing copy alone — the henley, the Cloud Soft Tee and the Moovex Chino cover most of what a customer would build a rotation from.' },
+        sub:'The Flex henley is the most-clicked product on the storefront — quick dry, wrinkle resist and four-way stretch, called out on the garment itself. The same claims carry across the tee and the chino, so the henley, the Cloud Soft Tee and the Moovex Chino cover most of what a customer would build a rotation from.' },
       { agent:'orchestrator', about:true, editable:true,
-        title:'Business landscape',
-        sub:'The category is technical menswear sold direct: a crowded shelf where nearly every brand leads on the same three fabric claims, so the buying decision usually comes down to fit and how the brand carries itself.',
-        tags:['Technical apparel', 'Direct to consumer', 'Menswear', 'Mid-market'] },
+        title:'Audience',
+        sub:'Buyers skew 24 to 34, metro India, training two or three times a week and wearing the same piece to work after.' },
       { agent:'orchestrator', about:true, editable:true,
-        title:'Business landscape',
-        sub:'These are the brands you are shown next to — they come up beside you in search, in AI answers and in the same ad auctions. Take any of them off if they are not who you measure yourself against.',
-        tags:['Rhone', 'Vuori', 'Ten Thousand', 'Lululemon'] },
-      { agent:'orchestrator', about:true, editable:true,
-        title:'Growth direction',
-        sub:'Urban Performance now extends beyond performance basics — the range has grown from technical tees into outerwear and lifestyle pieces, for customers who started with one Flex henley and stayed for the rest of the wardrobe.' }
+        title:'Competitors',
+        tags:[{ t:'rhone.com', dot:'#1c2b3a' }, { t:'vuoriclothing.com', dot:'#c2703f' },
+              { t:'tenthousand.cc', dot:'#111111' }, { t:'cultsport.com', dot:'#d13b2e' }] }
     ];
     // placeholder copy for any brand without a bespoke set above: same categories, generic content
     const genericAbout = (B) => [
       { agent:'orchestrator', about:true, editable:true, title:'About the brand',
         sub:`What ${B.name} stands for, distilled from the homepage and the way its product copy talks about itself.` },
+      { agent:'orchestrator', about:true, editable:true, title:'Voice and tone',
+        sub:'How the brand writes when it is describing its own products.' },
+      { agent:'orchestrator', about:true,
+        connect:'shopify' },
+      { agent:'orchestrator', about:true, editable:true, title:'Company',
+        sub:`Where ${B.name} is run from, how long it has been trading, how it reaches people, and roughly where it sits against others in its category.`,
+        tags:[{ t:'Add team size', gap:true }, { t:'Add locations', gap:true }] },
+      { agent:'orchestrator', about:true, editable:true, title:'Product catalog',
+        sub:`${B.products} products being pulled into one catalog, organized the way ${B.name} already organizes them.` },
       { agent:'orchestrator', about:true, editable:true, title:'Product information',
-        sub:'The item getting the most attention on the storefront right now, and the claim it leads with.' },
-      { agent:'orchestrator', about:true, editable:true, title:'Product information',
-        sub:`The handful of product lines that make up most of ${B.name}'s range today, and what ties them together.` },
-      { agent:'orchestrator', about:true, editable:true, title:'Business landscape',
-        sub:'The category this brand sells into, and the handful of names it keeps coming up against.' },
-      { agent:'orchestrator', about:true, editable:true, title:'Growth direction',
-        sub:'The direction the newest additions to the catalog point, beyond what the brand was originally known for.' }
+        sub:'The item getting the most attention on the storefront right now, the claim it leads with, and the handful of product lines that make up most of the range today.' },
+      { agent:'orchestrator', about:true, editable:true, title:'Audience',
+        sub:'Who the storefront is written for, read off the product copy and the reviews.' },
+      { agent:'orchestrator', about:true, editable:true, title:'Competitors',
+        tags:[{ t:'Add a competitor', gap:true }, { t:'Add a competitor', gap:true }] }
     ];
     const ABOUT_CONTENT = (B) => B.host === 'urbanperformance.com' ? UP_ABOUT : genericAbout(B);
 
@@ -5887,7 +5892,17 @@
     // title line, the copy under it, and nothing else. Editable because this is
     // the moment the user corrects what ShopOS just read off the store.
     const AB_MARK = AGENTS.orchestrator.avatar;
-    const aboutCard = (p) => `
+
+    // a tag is a plain fact, a competitor with its own mark, or a gap still to fill
+    const abTag = (t) => {
+      const o = typeof t === 'string' ? { t } : t;
+      if (o.gap) return `<span class="ab-tag is-gap">${svg(I.plus, 12)}${o.t}</span>`;
+      return `<span class="ab-tag">
+        ${o.dot ? `<i class="ab-tag-dot" style="background:${o.dot}"></i>` : ''}${o.t}
+        <button class="ab-tag-x" aria-label="Remove ${o.t}">${svg(I.x, 11)}</button>
+      </span>`;
+    };
+const aboutCard = (p) => `
       <article class="card about-card${p.brandkit ? ' has-kit' : ''}">
         <div class="ab-scroll">
           ${p.title ? `<div class="ab-head">
@@ -5895,67 +5910,117 @@
               <img class="ab-mark" src="${AB_MARK}" alt="">
               <span>${p.title}</span>
             </h2>
-            ${p.editable ? `<button class="ab-editbtn" aria-label="Edit">${svg(I.edit, 15)}</button>` : ''}
+            ${p.editable ? `<span class="ab-actions">
+              <button class="ab-btn" data-ab="edit" aria-label="Edit">${svg(I.edit, 15)}</button>
+            </span>` : ''}
           </div>` : ''}
           ${p.brandkit ? kitStrip(p.brandkit) : ''}
           ${p.sub ? `<p class="ab-sub"${p.editable ? ' role="textbox" aria-label="Description"' : ''}>${p.sub}</p>` : ''}
-          ${p.tags ? `<div class="ab-tags">${p.tags.map(t => `
-            <span class="ab-tag">${t}<button class="ab-tag-x" aria-label="Remove ${t}">${svg(I.x, 11)}</button></span>`).join('')}</div>` : ''}
+          ${p.tags ? `<div class="ab-tags">${p.tags.map(abTag).join('')}</div>` : ''}
         </div>
-        ${p.brandkit ? '' : '<div class="ab-fade"></div>'}
       </article>`;
 
-    // click the pencil to turn the description into an input; click it again
-    // (now a checkmark) to settle it back into plain copy
-    deckEl.addEventListener('click', (e) => {
-      const btn = e.target.closest('.ab-editbtn');
-      if (!btn) return;
-      const cardEl = btn.closest('.about-card');
-      const sub = cardEl?.querySelector('.ab-sub');
-      if (!sub) return;
-      const nowEditing = cardEl.classList.toggle('editing');
-      if (nowEditing) {
+    // a lighter row for the one card that isn't a finding: the same shape as a
+    // Signals connector row (icon, name, one line, a white Connect button),
+    // just with copy written for this moment rather than the generic Signals one
+    const CONNECT_ROWS = {
+      shopify: { icon:'<img src="assets/logo-shopify.png" alt="">', name:'Shopify',
+                 desc:'Connect Shopify for detailed product analytics.' }
+    };
+    const aboutConnectRow = (id) => {
+      const c = CONNECT_ROWS[id];
+      return `
+      <div class="src about-connect-row" data-ab-connect="${id}">
+        <i class="src-ic">${c.icon}</i>
+        <span class="src-t"><b>${c.name}</b><span>${c.desc}</span></span>
+        <span class="src-state"><i class="src-spin"></i>Connecting</span>
+        <button class="src-btn" data-ab-connect-go="${id}">Connect</button>
+      </div>`;
+    };
+    const aboutConnectSkeleton = () => `
+      <div class="skeleton about-skeleton is-row" aria-hidden="true">
+        <div class="sk-row-ab">
+          <div class="sk sk-mark"></div>
+          <div class="sk sk-line" style="flex:1 1 auto;height:13px"></div>
+          <div class="sk" style="width:76px;height:26px;border-radius:999px"></div>
+        </div>
+      </div>`;
+
+    // pencil opens editing (text becomes an input, tag crosses appear); the
+    // checkmark keeps what changed, the cross puts it back the way it was —
+    // both plain icons, nothing styled to draw extra attention to either
+    const abSnapshots = new WeakMap();
+    const startAbEdit = (cardEl) => {
+      if (!cardEl || cardEl.classList.contains('editing')) return;
+      cardEl.classList.add('editing');
+      const sub = cardEl.querySelector('.ab-sub');
+      const tags = cardEl.querySelector('.ab-tags');
+      abSnapshots.set(cardEl, { sub: sub ? sub.textContent : null, tags: tags ? tags.innerHTML : null });
+      if (sub) {
         sub.setAttribute('contenteditable', 'plaintext-only');
         sub.spellcheck = false;
-        btn.innerHTML = svg(I.check, 15);
-        btn.setAttribute('aria-label', 'Done editing');
         sub.focus();
         document.getSelection()?.collapseToEnd();
-      } else {
+      }
+      const actions = cardEl.querySelector('.ab-actions');
+      if (actions) actions.innerHTML = `
+        <button class="ab-btn" data-ab="save" aria-label="Save">${svg(I.check, 15)}</button>
+        <button class="ab-btn" data-ab="cancel" aria-label="Discard changes">${svg(I.x, 15)}</button>`;
+    };
+    const endAbEdit = (cardEl, save) => {
+      if (!cardEl) return;
+      const snap = abSnapshots.get(cardEl);
+      const sub = cardEl.querySelector('.ab-sub');
+      if (sub) {
+        if (!save && snap?.sub != null) sub.textContent = snap.sub;
         sub.removeAttribute('contenteditable');
-        btn.innerHTML = svg(I.edit, 15);
-        btn.setAttribute('aria-label', 'Edit');
+      }
+      if (!save) {
+        const tags = cardEl.querySelector('.ab-tags');
+        if (tags && snap?.tags != null) tags.innerHTML = snap.tags;
+      }
+      abSnapshots.delete(cardEl);
+      cardEl.classList.remove('editing');
+      const actions = cardEl.querySelector('.ab-actions');
+      if (actions) actions.innerHTML = `<button class="ab-btn" data-ab="edit" aria-label="Edit">${svg(I.edit, 15)}</button>`;
+    };
+    deckEl.addEventListener('click', (e) => {
+      const editBtn = e.target.closest('[data-ab="edit"]');
+      if (editBtn) return startAbEdit(editBtn.closest('.about-card'));
+      const saveBtn = e.target.closest('[data-ab="save"]');
+      if (saveBtn) return endAbEdit(saveBtn.closest('.about-card'), true);
+      const cancelBtn = e.target.closest('[data-ab="cancel"]');
+      if (cancelBtn) return endAbEdit(cancelBtn.closest('.about-card'), false);
+      // the Shopify nudge connects on its own, quiet timeline — no shared
+      // Signals state, just enough feedback that the click landed
+      const goBtn = e.target.closest('[data-ab-connect-go]');
+      if (goBtn) {
+        const row = goBtn.closest('.about-connect-row');
+        if (!row || row.classList.contains('is-busy') || row.classList.contains('is-on')) return;
+        const c = CONNECT_ROWS[goBtn.dataset.abConnectGo];
+        row.classList.add('is-busy');
+        at(1400, () => {
+          row.classList.add('is-on');
+          row.innerHTML = `<i class="src-ic">${c.icon}</i>
+            <span class="src-t"><b>${c.name}</b><span>${c.desc}</span></span>
+            <span class="src-ok">Connected</span>`;
+        });
       }
     });
 
-    // pressing Enter settles the edit the same way clicking the checkmark does;
-    // Escape backs out without the extra click
+    // Enter settles an edit the same way the checkmark does; Escape discards
+    // it the same way the cross does
     deckEl.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter' && e.key !== 'Escape') return;
       const sub = e.target.closest('.ab-sub[contenteditable]');
       if (!sub) return;
       e.preventDefault();
-      sub.closest('.about-card')?.querySelector('.ab-editbtn')?.click();
+      endAbEdit(sub.closest('.about-card'), e.key === 'Enter');
       sub.blur();
     });
 
-    // does this card's copy overflow its fixed height? if so, show the fade
-    // cue and keep it in step with how far the card has been scrolled
-    const markScrollable = (cardEl) => {
-      const sc = cardEl.querySelector('.ab-scroll');
-      if (!sc) return;
-      const check = () => {
-        const scrollable = sc.scrollHeight > sc.clientHeight + 1;
-        cardEl.classList.toggle('is-scrollable', scrollable);
-        cardEl.classList.toggle('at-bottom', sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 1);
-      };
-      check();
-      sc.addEventListener('scroll', check);
-      // typing during edit can grow or shrink the content
-      sc.addEventListener('input', check);
-    };
-
-    // the skeleton is the same shape and the same fixed height as the card above
+    // the skeleton is the same shape as the card above, minus a fixed height —
+    // it just no longer needs to match exactly, since neither one scrolls
     const aboutSkeleton = (kit) => `
       <article class="skeleton about-skeleton${kit ? ' has-kit' : ''}" aria-hidden="true">
         <div class="sk-ab">
@@ -5963,10 +6028,10 @@
             <div class="sk sk-mark"></div>
             <div class="sk sk-line" style="flex:1 1 auto;height:15px"></div>
           </div>
-          ${kit ? '<div class="sk" style="height:104px;border-radius:12px"></div>' : ''}
+          ${kit ? '<div class="sk" style="height:104px;border-radius:12px"></div>' : `
           <div class="sk sk-line" style="width:96%"></div>
           <div class="sk sk-line" style="width:90%"></div>
-          <div class="sk sk-line" style="width:52%"></div>
+          <div class="sk sk-line" style="width:52%"></div>`}
         </div>
       </article>`;
 
@@ -5992,7 +6057,8 @@
         <span class="grab" role="separator" aria-orientation="vertical" aria-label="Column width"></span>
       </section>`;
 
-    // a tag comes off the card when its cross is clicked
+    // a tag comes off the card when its cross is clicked — only reachable
+    // while the card is in editing state, since that's the only time it shows
     deckEl.addEventListener('click', (e) => {
       const x = e.target.closest('.ab-tag-x');
       if (!x) return;
@@ -6002,7 +6068,7 @@
       if (row && !row.querySelector('.ab-tag')) row.remove();
     });
 
-    // fills once, front to back, well ahead of the creative/ad columns behind it
+        // fills once, front to back, well ahead of the creative/ad columns behind it
     const fillAbout = () => {
       const col = deckEl.querySelector('.col[data-col="about"]');
       if (!col) return;
@@ -6011,16 +6077,15 @@
       const list = ABOUT_CONTENT(BRAND);
       list.forEach((s, i) => {
         const slot = document.createElement('div');
-        slot.innerHTML = aboutSkeleton(s.brandkit);
+        slot.innerHTML = s.connect ? aboutConnectSkeleton() : aboutSkeleton(s.brandkit);
         body.appendChild(slot.firstElementChild);
         const sk = body.querySelectorAll('.skeleton')[i];
         at(500 + i * 900 + Math.random() * 300, () => {
           const w = document.createElement('div');
-          w.innerHTML = aboutCard(s);
+          w.innerHTML = s.connect ? aboutConnectRow(s.connect) : aboutCard(s);
           const el = w.firstElementChild;
           el.classList.add('in');
           sk.replaceWith(el);
-          markScrollable(el);
           if (i === list.length - 1) setColStatus('about', 'Brand memory saved');
         });
       });
@@ -6135,7 +6200,6 @@
         SETUP_COLS.forEach(k => setColStatus(k, k === 'about' ? 'Brand memory saved' : 'Posting to your feed'));
         AG_ORDER.forEach(k => wakeAgent(k, 'Posting to your feed', true, true));
         document.getElementById('su-done').classList.add('on');
-        countTo(document.getElementById('su-credits'), 500);
       };
     };
 
