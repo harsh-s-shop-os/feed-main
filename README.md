@@ -17,6 +17,19 @@ Or with Node:
 
 Opening `index.html` directly also works, since nothing here needs a server.
 
+## Content comes from Google Sheets
+
+Posts are not written in `index.html` anymore. They come from the Brand Feeds sheet
+(https://docs.google.com/spreadsheets/d/1KKs-1639ns-eRO9PxOjMPK2vw_W9tFUmG0u3SZuwP6g).
+Each tab in `tools/sheet.config.json` is one feed variant, and the v1/v2/v3 switch picks the tab.
+
+    python3 tools/sync_sheet.py            # pull the sheet and rewrite data/feed-data.js
+    python3 tools/sync_sheet.py --check    # validate only
+
+Needs Python 3 with openpyxl (`pip3 install openpyxl`). The "How to Use" tab in the sheet
+explains every column. Row order is feed order. Google Drive images must be link-shared,
+or sit in `assets/` and be referenced by path.
+
 ## Editing
 
 Everything lives in `index.html`: styles at the top, markup in the middle,
